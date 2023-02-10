@@ -82,9 +82,10 @@ public class Report {
                     .append(part.getEmail())
                     .append(",");
 
-            part.checkConferences(conferences);
-            for (Integer dur: part.getDurations()) {
-                stringBuilder.append(dur).append(",");
+            part.calcStatistics(conferences);
+            for (Conference conference : conferences) {
+                Participant.Statistics stat = part.getStatistics(conference.getId());
+                stringBuilder.append(stat.getDuration()).append(",");
             }
 
             stringBuilder.append(part.getCountVisits()).append(" - ");
