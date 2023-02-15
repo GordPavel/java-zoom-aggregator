@@ -5,7 +5,10 @@ import entities.Participant;
 import org.apache.commons.lang3.math.NumberUtils;
 import utils.CSVUtils;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
@@ -76,39 +79,43 @@ public class Report {
     }
 
     public void printReport(BufferedWriter writer) throws IOException {
-        writer.write(",");
+        writer.write("Имя,Email,Кол-во посещенных конференций,Средний процент посещения");
         for (Conference conference : conferences) {
-            writer.write(",");
-            writer.write(conference.getId());
-            writer.write(" - ");
-            writer.write(new SimpleDateFormat(CSVUtils.DATE_FRMT).format(conference.getStartDate()));
+            writer.write("," + conference.getId());
+        }
+
+        writer.write("\n");
+        writer.write("Дата конференции,,,");
+
+        for (Conference conference : conferences) {
+            writer.write("," + new SimpleDateFormat(CSVUtils.DATE_FRMT).format(conference.getStartDate()));
         }
 
         writer.write("\n");
 
-        for (Participant part: participants) {
-            writer.write(part.getName());
-            writer.write(",");
-            writer.write(part.getEmail());
-            writer.write(",");
+        for (Participant part : participants) {
+            writer.write(part.getName() + "," +
+                    part.getEmail() + "," +
+                    part.getCountVisits() + "," +
+                    part.getAvgPercent());
 
             for (Conference conference : conferences) {
                 Participant.Statistics stat = part.getStatistics(conference.getId());
-                writer.write(String.valueOf(stat.getDuration()));
-                writer.write(",");
+                writer.write("," + stat.getDuration());
             }
 
-            writer.write(String.valueOf(part.getCountVisits()));
-            writer.write(" - ");
-            writer.write(String.valueOf(part.getAvgPercent()));
             writer.write("\n");
         }
 
-        writer.append(",");
+        writer.append("Количество участников,,,,");
         for (Conference conference : conferences) {
-            writer.write(",");
             writer.write(String.valueOf(conference.getCountGuests()));
-            writer.write(" - ");
+        }
+
+        writer.write("\n");
+
+        writer.append("Процент участников,,,,");
+        for (Conference conference : conferences) {
             writer.write(String.valueOf(conference.getPercentGuests()));
         }
     }
