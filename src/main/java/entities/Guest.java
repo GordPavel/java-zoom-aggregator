@@ -12,6 +12,18 @@ public class Guest {
     @CsvBindByPosition(position = 2)
     private int duration;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public String getName() {
         return name;
     }
